@@ -1,6 +1,13 @@
 const graphql = require('graphql');
 const axios = require('axios');
-const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLList } = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLNonNull
+} = graphql;
 
 // RIP temp hard-coded users DB, 2019-2019
 // [...]
@@ -18,7 +25,9 @@ const CompanyType = new GraphQLObjectType({
       // Returns a list of users
       type: new GraphQLList(UserType),
       resolve(parentValue, args) {
-        return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`).then(res => res.data)
+        return axios
+          .get(`http://localhost:3000/companies/${parentValue.id}/users`)
+          .then(res => res.data);
       }
     }
   })
@@ -71,6 +80,28 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addUser: {
+      // Type of data that the mutation will RETURN
+      type: UserType,
+      args: {
+        // GraphQLNonNull is like 'required' in that the data must be provided
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
+        companyID: { type: GraphQLString }
+      },
+      resolve(parentValue, { firstName, age }) {
+        axios
+          .post('http://localhost:3000/users', { firstName, age })
+          .then(res => res.data);
+      }
+    }
+  }
+});
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 });
