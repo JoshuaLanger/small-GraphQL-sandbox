@@ -43,7 +43,7 @@ const UserType = new GraphQLObjectType({
 });
 
 // Root Query - starting point for query
-const RootQuery = newGraphQLObjectType({
+const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
     // GraphQL will return a user query if given the ID
