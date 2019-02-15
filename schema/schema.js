@@ -2,34 +2,8 @@ const graphql = require('graphql');
 const _ = require('lodash');
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
 
-// Temp hardcoded database of users
-const users = [
-  {
-    id: '1',
-    firstName: 'BillyBob',
-    age: 19
-  },
-  {
-    id: '2',
-    firstName: 'BobbyBill',
-    age: 26
-  },
-  {
-    id: '3',
-    firstName: 'BillyJean',
-    age: 43
-  },
-  {
-    id: '4',
-    firstName: 'SusieRay',
-    age: 56
-  },
-  {
-    id: '5',
-    firstName: 'DollySue',
-    age: 67
-  }
-];
+// RIP temp hard-coded users DB, 2019-2019
+// [...]
 
 // This tells GraphQL what a 'user' object looks like
 const UserType = new GraphQLObjectType({
