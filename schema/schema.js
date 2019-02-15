@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const _ = require('lodash');
+const axios = require('axios');
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
 
 // RIP temp hard-coded users DB, 2019-2019
@@ -26,8 +26,10 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLString } },
       // This function reaches out to grab the data
       resolve(parentValue, args) {
-        // Use lodash to walk through users object and return user object that matches given ID
-        return _.find(users, { id: args.id });
+        // Return JSON from independent database
+        return axios
+          .get(`http://localhost:3000/users/${args.id}`)
+          .then(res => res.data);
       }
     }
   }
