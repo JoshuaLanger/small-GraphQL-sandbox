@@ -5,14 +5,34 @@ const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
 // RIP temp hard-coded users DB, 2019-2019
 // [...]
 
-// This tells GraphQL what a 'user' object looks like
-const UserType = new GraphQLObjectType({
+// This tells GraphQL what a 'company' object looks like
+// MUST be placed BEFORE UserType because it will need to reference this
+const CompanyType = new GraphQLObjectType({
   // 'name' and 'fields' are required
-  name: 'User',
+  name: 'Company',
   fields: {
     id: { type: GraphQLString }, // 'id' is of type 'string'
+    name: { type: GraphQLString },
+    tag: { type: GraphQLString }
+  }
+});
+
+// This tells GraphQL what a 'user' object looks like
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: {
+    id: { type: GraphQLString },
     firstName: { type: GraphQLString },
-    age: { type: GraphQLInt } // 'age' is of type 'int'
+    age: { type: GraphQLInt }, // 'age' is of type 'int'
+    company: {
+      type: CompanyType,
+      // This function returns the company object associated with this user
+      resolve(parentValue, args) {
+        return axios
+          .get(`http://localhost:3000/companies/${parentValue.companyId}`)
+          .then(res => res.data);
+      }
+    }
   }
 });
 
