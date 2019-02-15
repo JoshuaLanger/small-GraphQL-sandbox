@@ -4,7 +4,7 @@
   "description": "A simple Express server that uses GraphQL to help handle queries",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",
