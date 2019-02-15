@@ -4,7 +4,7 @@
   "description": "A simple Express server that uses GraphQL to help handle queries",
   "main": "index.js",
   "scripts": {
-    "server": "node server.js"
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
     "express-graphql": "^0.7.1",
     "graphql": "^14.1.1",
     "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
