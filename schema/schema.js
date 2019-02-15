@@ -1,26 +1,33 @@
 const graphql = require('graphql');
 const axios = require('axios');
-const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLList } = graphql;
 
 // RIP temp hard-coded users DB, 2019-2019
 // [...]
 
 // This tells GraphQL what a 'company' object looks like
-// MUST be placed BEFORE UserType because it will need to reference this
 const CompanyType = new GraphQLObjectType({
   // 'name' and 'fields' are required
   name: 'Company',
-  fields: {
+  // This closure scope is not executed until later, meaning it won't throw an error that "UserType is not defined"
+  fields: () => ({
     id: { type: GraphQLString }, // 'id' is of type 'string'
     name: { type: GraphQLString },
-    tag: { type: GraphQLString }
-  }
+    tag: { type: GraphQLString },
+    users: {
+      // Returns a list of users
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`).then(res => res.data)
+      }
+    }
+  })
 });
 
 // This tells GraphQL what a 'user' object looks like
 const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
     age: { type: GraphQLInt }, // 'age' is of type 'int'
@@ -33,7 +40,7 @@ const UserType = new GraphQLObjectType({
           .then(res => res.data);
       }
     }
-  }
+  })
 });
 
 // Root Query - starting point for query
